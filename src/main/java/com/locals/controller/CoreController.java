@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,9 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,12 +37,6 @@ public class CoreController {
 	@Autowired
 	AuthenticationManager authManager;
 	
-	@InitBinder
-	public void initBinder(WebDataBinder dataBinder) {
-		StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);	
-		dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
-	}
-	
 	private boolean isAuthenticated(Authentication authentication) {
 	    return authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
 	}
@@ -56,11 +47,13 @@ public class CoreController {
 		if(br.hasErrors()) {
 			return ResponseEntity.badRequest().body(null);
 		}
-		if(StringUtils.isEmpty(user.getUsername()) || StringUtils.isEmpty(user.getPassword())) {
+		if(StringUtils.isEmpty(user.getUsername().trim()) || StringUtils.isEmpty(user.getPassword().trim())) {
 			return ResponseEntity.badRequest().body(null);
 		}
+		user.setUsername(user.getUsername().trim());
+		user.setPassword(user.getPassword().trim());
 		if(!StringUtils.isEmpty(userService.findByUsername(user.getUsername()))) {
-			logger.error("User with username : "+user.getUsername()+" already exists");
+			logger.error("User with username : "+user.getUsername().trim()+" already exists");
 			return ResponseEntity.badRequest().body(null);
 		}
 		
