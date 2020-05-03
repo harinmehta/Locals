@@ -36,14 +36,14 @@ Response:
           "password" : "xyz123"
          }
 ```
-Note- In the last case, if user with the username "harin" is already present in db, it's unacceptable.
+Note- In the last case, if user with the username "harin" is already present in db, it's unacceptable.<br />
 Response-
 ```
          400 Bad Request
 ```
 ## Login API 
 #### POST "/login"
-Request: Request Parameters
+Request: Request Parameters<br />
 1. Acceptable Requests
 ```
             username : harin
@@ -63,7 +63,7 @@ Response :
          username : zyfer
          password : 1234
 ```
-Note : This user is not in db
+Note : This user is not in db<br />
 Response:
 ```
          {
