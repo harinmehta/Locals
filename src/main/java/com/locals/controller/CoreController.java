@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
@@ -37,6 +38,9 @@ public class CoreController {
 	@Autowired
 	AuthenticationManager authManager;
 	
+	@Autowired
+	BCryptPasswordEncoder passwordEncoder;
+	
 	private boolean isAuthenticated(Authentication authentication) {
 	    return authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
 	}
@@ -51,7 +55,8 @@ public class CoreController {
 			return ResponseEntity.badRequest().body(null);
 		}
 		user.setUsername(user.getUsername().trim());
-		user.setPassword(user.getPassword().trim());
+		String encodedPassword = passwordEncoder.encode((user.getPassword()).trim());
+		user.setPassword(encodedPassword);
 		if(!StringUtils.isEmpty(userService.findByUsername(user.getUsername()))) {
 			logger.error("User with username : "+user.getUsername().trim()+" already exists");
 			return ResponseEntity.badRequest().body(null);
