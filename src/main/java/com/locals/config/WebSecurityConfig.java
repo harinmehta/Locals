@@ -23,8 +23,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		
 		http.authorizeRequests()
-			.antMatchers("/signup", "/login", "/users").permitAll()
+			.antMatchers("/signup", "/login", "/users", "/loggedOut").permitAll()
 			.anyRequest().authenticated()
+			.and().logout().logoutUrl("/logout").logoutSuccessUrl("/loggedOut")
 			.and().csrf().disable();
 	}
 

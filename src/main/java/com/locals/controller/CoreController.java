@@ -2,6 +2,8 @@ package com.locals.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,10 @@ public class CoreController {
 		dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
 	}
 	
+	private boolean isAuthenticated(Authentication authentication) {
+	    return authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
+	}
+	
 	@PostMapping("/signup")
 	public ResponseEntity<User> register(@RequestBody User user, BindingResult br){
 		
@@ -67,9 +73,8 @@ public class CoreController {
 		
 		return ResponseEntity.accepted().body(userService.getAll());
 	}
-	private boolean isAuthenticated(Authentication authentication) {
-	    return authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
-	}
+	
+	
 	@PostMapping("/login")
 	public ResponseEntity<User> login(@RequestParam(name =  "username") String username,
 										@RequestParam(name = "password") String password){
@@ -91,7 +96,17 @@ public class CoreController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		return ResponseEntity.accepted().body(user);
 		
-		
+	}
+	
+	@PostMapping("/dummy")
+	public ResponseEntity<String> dummy(HttpServletRequest request){
+		request.getSession().setMaxInactiveInterval(65);
+		return ResponseEntity.accepted().body("Session extended to : "+65+" seconds");
+	}
+
+    @GetMapping("/loggedOut")
+	public ResponseEntity<String> loggedOut(){
+    	return ResponseEntity.accepted().body("Logged out.");
 	}
 	
 }
