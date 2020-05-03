@@ -15,7 +15,7 @@ Response:
         {  
           "userID": 1,
           "username": "harin",
-          "password": "harin123",
+          "password": "$2a$10$sRtXAHN00PTIPWW29mVMh.P9dQm822Wonp6a9u/P5djw.6UT0ga8.",
           "registrationDate": "2020-05-03T14:27:42.833"
          }
  ```
@@ -54,7 +54,7 @@ Response :
          {  
           "userID": 1,
           "username": "harin",
-          "password": "harin123",
+          "password": "$2a$10$sRtXAHN00PTIPWW29mVMh.P9dQm822Wonp6a9u/P5djw.6UT0ga8.",
           "registrationDate": "2020-05-03T14:27:42.833"
          }
 ```
